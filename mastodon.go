@@ -87,7 +87,7 @@ LISTENSTREAM:
 			case "notification":
 				s := ev.Data.(madon.Notification)
 				statusOutChan <- s
-			case "update", "delete":
+			case "update", "delete", "status.update":
 				continue
 			default:
 				LogMadon_.Printf("goSubscribeStreamOfTagNames: Unhandled event: [%s] %T\n", ev.Event, ev.Data)
