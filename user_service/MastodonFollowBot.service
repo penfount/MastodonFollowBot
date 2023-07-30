@@ -1,0 +1,35 @@
+[Unit]
+Description=Mastodon Boost Bot
+Wants=network.target
+StartLimitIntervalSec=0
+
+
+[Service]
+Type=simple
+ExecStart=%h/bin/MastodonFollowBot --debug=ALL
+EnvironmentFile=%h/.config/mastodonFollowBot_config1.env
+
+## MastodonFollowBot per-design quits on any error (even network)
+## configure here how quickly it retries / restarts
+Restart=always
+RestartSec=3
+
+## keep the bot well behaved
+Nice=10
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+SystemCallArchitectures=native
+SystemCallFilter=~@chown @clock @cpu-emulation @debug @keyring @module @mount @obsolete @privileged @swap @sync @raw-io
+CPUQuota=50%
+LimitFSIZE=128
+ProtectControlGroups=yes
+## only possible in system context, won't work with --user
+#PrivateDevices=true
+#ProtectKernelModules=true
+#CapabilityBoundingSet=
+
+
+[Install]
+WantedBy=default.target
