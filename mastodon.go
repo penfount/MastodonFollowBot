@@ -103,8 +103,8 @@ LISTENSTREAM:
 	}
 }
 
-func getRelation(client *madon.Client, accID int64) (madon.Relationship, error) {
-	relationshiplist, err := client.GetAccountRelationships([]int64{accID})
+func getRelation(client *madon.Client, accID string) (madon.Relationship, error) {
+	relationshiplist, err := client.GetAccountRelationships([]string{accID})
 	if err != nil {
 		return madon.Relationship{}, err
 	}
@@ -117,7 +117,7 @@ func getRelation(client *madon.Client, accID int64) (madon.Relationship, error) 
 func goFollowBack(client *madon.Client, notification_chan <-chan madon.Notification) {
 	for notification := range notification_chan {
 		relationship, err := client.FollowAccount(notification.Account.ID, nil)
-		LogMadon_.Printf("goFollowBack: Following account %s (id %d), following %t, followed_by %t\n", notification.Account.Acct, relationship.ID, relationship.Following, relationship.FollowedBy)
+		LogMadon_.Printf("goFollowBack: Following account %s (id %s), following %t, followed_by %t\n", notification.Account.Acct, relationship.ID, relationship.Following, relationship.FollowedBy)
 		if err != nil {
 			LogMadon_.Printf("goFollowBack: Error: %s\n", err.Error())
 		}
