@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/McKael/madon"
 	"github.com/spf13/viper"
@@ -69,7 +70,7 @@ LISTENSTREAM:
 	for {
 		select {
 		case v, ok := <-done:
-			if !ok || v == true { // done is closed, end of streaming
+			if !ok || v { // done is closed, end of streaming
 				break LISTENSTREAM
 			}
 		case ev := <-evChan:
@@ -81,6 +82,10 @@ LISTENSTREAM:
 						continue
 					}
 					LogMadon_.Printf("goSubscribeStreamOfTagNames: Error event: [%s] %s\n", ev.Event, ev.Error)
+					// bail if the error starts with "read error"
+					if strings.HasPrefix(ev.Error.Error(), "read error") {
+						os.Exit(1)
+					}
 					continue
 				}
 				LogMadon_.Printf("goSubscribeStreamOfTagNames: Event: [%s]\n", ev.Event)
