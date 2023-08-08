@@ -2,8 +2,6 @@ module github.com/penfount/MastodonFollowBot
 
 go 1.12
 
-replace github.com/McKael/madon => /home/mlei/repos/madon
-
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
