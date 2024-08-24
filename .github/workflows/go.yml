@@ -20,15 +20,17 @@ jobs:
     - name: Build
       run: |
         mkdir -p target/amd64 target/arm64
-        env GOOS=linux GOARCH=amd64 go build -v -o target/amd64/${{ github.event.repository.name }} ./... 
-        env GOOS=linux GOARCH=arm64 go build -v -o target/arm64/${{ github.event.repository.name }} ./... 
+        env GOOS=linux GOARCH=amd64 go build -v -o target/amd64/${{ github.event.repository.name }} ./...
+        env GOOS=linux GOARCH=arm64 go build -v -o target/arm64/${{ github.event.repository.name }} ./...
 
-    - uses: actions/upload-artifact@v4
+    - name: Upload amd64 build
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.repository.name }}-linux-amd64
         path: target/amd64/${{ github.event.repository.name }}
 
-    - uses: actions/upload-artifact@v4
+    - name: Upload arm64 build
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.repository.name }}-linux-arm64
         path: target/arm64/${{ github.event.repository.name }}
