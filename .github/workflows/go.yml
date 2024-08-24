@@ -9,6 +9,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
     steps:
     - uses: actions/checkout@v4
 
@@ -41,7 +44,7 @@ jobs:
       id: create-tag
       with:
         script: |
-          let tag_name = 'refs/tags/v0.' + github.run_number
+          let tag_name = 'refs/tags/v0.' + run_number.toString()
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
