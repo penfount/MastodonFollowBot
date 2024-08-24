@@ -59,7 +59,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       if: github.ref_name == 'main'
       with:
-        tag_name: ${{ steps.create-tag.outputs.result }}
+        tag_name: v0.${{ github.run_number }}
         files: |
           target/${{ github.event.repository.name }}_linux-amd64.tar.gz
           target/${{ github.event.repository.name }}_linux-arm64.tar.gz
