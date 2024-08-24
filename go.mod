@@ -11,11 +11,6 @@ require (
 	github.com/dustin/go-jsonpointer v0.0.0-20160814072949-ba0abeacc3dc // indirect
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
 	github.com/garyburd/go-oauth v0.0.0-20180319155456-bca2e7f09a17 // indirect
-	github.com/gorilla/websocket v1.4.0 // indirect
-	github.com/microcosm-cc/bluemonday v1.0.2
-	github.com/pkg/errors v0.8.1 // indirect
-	github.com/sendgrid/rest v2.4.1+incompatible // indirect
 	github.com/spf13/pflag v1.0.3
 	github.com/spf13/viper v1.3.2
-	golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a // indirect
 )
