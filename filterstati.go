@@ -1,7 +1,7 @@
 /// (c) Bernhard Tittelbach, 2019 - MIT License
 package main
 
-import "github.com/McKael/madon"
+import "github.com/McKael/madon/v3"
 
 func goFilterStati(client *madon.Client, statusIn <-chan madon.Notification, statusOut chan<- madon.Notification) {
 	defer close(statusOut)

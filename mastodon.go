@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/McKael/madon"
+	"github.com/McKael/madon/v3"
 	"github.com/spf13/viper"
 )
 
