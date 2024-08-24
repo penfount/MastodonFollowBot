@@ -31,11 +31,13 @@ jobs:
     - name: Upload amd64 build
       uses: actions/upload-artifact@v4
       with:
+        name: ${{ github.event.repository.name }}_linux-amd64.tar.gz
         path: target/${{ github.event.repository.name }}_linux-amd64.tar.gz
 
     - name: Upload arm64 build
       uses: actions/upload-artifact@v4
       with:
+        name: ${{ github.event.repository.name }}_linux-arm64.tar.gz
         path: target/${{ github.event.repository.name }}_linux-arm64.tar.gz
 
     - name: (Main only) Create tag
