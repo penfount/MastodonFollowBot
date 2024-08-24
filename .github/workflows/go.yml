@@ -34,3 +34,12 @@ jobs:
       with:
         name: ${{ github.event.repository.name }}-linux-arm64
         path: target/arm64/${{ github.event.repository.name }}
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: github.ref_name == 'main'
+      with:
+        name: v0.${{ github.run_number}}
+        files: |
+          target/amd64/${{ github.event.repository.name }}
+          target/arm64/${{ github.event.repository.name }}
