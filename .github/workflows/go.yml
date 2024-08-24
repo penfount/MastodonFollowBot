@@ -22,21 +22,21 @@ jobs:
 
     - name: Build
       run: |
-        mkdir -p target/amd64 target/arm64
-        env GOOS=linux GOARCH=amd64 go build -v -o target/amd64/${{ github.event.repository.name }} ./...
-        env GOOS=linux GOARCH=arm64 go build -v -o target/arm64/${{ github.event.repository.name }} ./...
+        for arch in amd64 arm64; do
+          mkdir -p target/${arch}
+          env GOOS=linux GOARCH=${arch} go build -v -o target/${arch}/${{ github.event.repository.name }} ./...
+          tar cvzf target/${{ github.event.repository.name }}_linux-${arch}.tar.gz -C target/${arch} ${{ github.event.repository.name }}
+        done
 
     - name: Upload amd64 build
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.repository.name }}-linux-amd64
-        path: target/amd64/${{ github.event.repository.name }}
+        path: target/${{ github.event.repository.name }}_linux-amd64.tar.gz
 
     - name: Upload arm64 build
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.repository.name }}-linux-arm64
-        path: target/arm64/${{ github.event.repository.name }}
+        path: target/${{ github.event.repository.name }}_linux-arm64.tar.gz
 
     - name: (Main only) Create tag
       uses: actions/github-script@v7
@@ -44,11 +44,11 @@ jobs:
       id: create-tag
       with:
         script: |
-          let tag_name = 'refs/tags/v0.' + context.runNumber.toString()
+          let tag_name = 'v0.' + context.runNumber.toString()
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: tag_name,
+            ref: 'refs/tags/' + tag_name,
             sha: context.sha
           })
           return tag_name
@@ -59,5 +59,5 @@ jobs:
       with:
         tag_name: ${{ steps.create-tag.outputs.result }}
         files: |
-          target/amd64/${{ github.event.repository.name }}
-          target/arm64/${{ github.event.repository.name }}
+          target/${{ github.event.repository.name }}_linux-amd64.tar.gz
+          target/${{ github.event.repository.name }}_linux-arm64.tar.gz
