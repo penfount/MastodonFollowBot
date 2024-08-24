@@ -44,7 +44,7 @@ jobs:
       id: create-tag
       with:
         script: |
-          let tag_name = 'refs/tags/v0.' + run_number.toString()
+          let tag_name = 'refs/tags/v0.' + context.run_number.toString()
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
