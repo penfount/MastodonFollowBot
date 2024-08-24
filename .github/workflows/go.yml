@@ -9,6 +9,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
     steps:
     - uses: actions/checkout@v4
 
@@ -19,18 +22,44 @@ jobs:
 
     - name: Build
       run: |
-        mkdir -p target/amd64 target/arm64
-        env GOOS=linux GOARCH=amd64 go build -v -o target/amd64/${{ github.event.repository.name }} ./...
-        env GOOS=linux GOARCH=arm64 go build -v -o target/arm64/${{ github.event.repository.name }} ./...
+        for arch in amd64 arm64; do
+          mkdir -p target/${arch}
+          env GOOS=linux GOARCH=${arch} go build -v -o target/${arch}/${{ github.event.repository.name }} ./...
+          tar cvzf target/${{ github.event.repository.name }}_linux-${arch}.tar.gz -C target/${arch} ${{ github.event.repository.name }}
+        done
 
     - name: Upload amd64 build
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.repository.name }}-linux-amd64
-        path: target/amd64/${{ github.event.repository.name }}
+        name: ${{ github.event.repository.name }}_linux-amd64.tar.gz
+        path: target/${{ github.event.repository.name }}_linux-amd64.tar.gz
 
     - name: Upload arm64 build
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.repository.name }}-linux-arm64
-        path: target/arm64/${{ github.event.repository.name }}
+        name: ${{ github.event.repository.name }}_linux-arm64.tar.gz
+        path: target/${{ github.event.repository.name }}_linux-arm64.tar.gz
+
+    - name: (Main only) Create tag
+      uses: actions/github-script@v7
+      if: github.ref_name == 'main'
+      id: create-tag
+      with:
+        script: |
+          let tag_name = 'v0.' + context.runNumber.toString()
+          github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: 'refs/tags/' + tag_name,
+            sha: context.sha
+          })
+          return tag_name
+
+    - name: (Main only) Create release
+      uses: softprops/action-gh-release@v2
+      if: github.ref_name == 'main'
+      with:
+        tag_name: v0.${{ github.run_number }}
+        files: |
+          target/${{ github.event.repository.name }}_linux-amd64.tar.gz
+          target/${{ github.event.repository.name }}_linux-arm64.tar.gz
